@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:unn_mobile/core/misc/current_user_sync_storage.dart';
 import 'package:unn_mobile/core/misc/date_time_utilities/date_time_extensions.dart';
 import 'package:unn_mobile/core/misc/date_time_utilities/date_time_ranges.dart';
 import 'package:unn_mobile/core/models/schedule/schedule_filter.dart';
@@ -19,8 +20,10 @@ import 'package:unn_mobile/ui/widgets/persistent_header.dart';
 class ScheduleTab extends StatefulWidget {
   final IdType type;
   final ScheduleTabViewModel viewModel;
+  final CurrentUserSyncStorage currentUserSyncStorage;
 
-  const ScheduleTab(this.type, this.viewModel, {super.key});
+  const ScheduleTab(this.type, this.viewModel,
+      {super.key, required this.currentUserSyncStorage});
 
   @override
   State<ScheduleTab> createState() => ScheduleTabState();
@@ -205,7 +208,7 @@ class ScheduleTabState extends State<ScheduleTab>
                                 );
                               }
                               await showMessage(
-                                // ignore: use_build_context_synchronously
+                                
                                 context,
                                 result
                                     ? 'Расписание экспортировано в календарь "Расписание ННГУ". \n'
@@ -257,7 +260,7 @@ class ScheduleTabState extends State<ScheduleTab>
         suggestionsBuilder: (context, controller) async {
           final rawSuggestions = await model.getSearchSuggestions(
             controller.text,
-          ); // Неэффективно, но работает >:(
+          ); 
 
           return rawSuggestions.map<ScheduleSearchSuggestionItemView>(
             (e) => ScheduleSearchSuggestionItemView(
@@ -500,6 +503,7 @@ class ScheduleTabState extends State<ScheduleTab>
                   ScheduleItemNormal(
                     subject: snapshot.data!.values.elementAt(index)[i],
                     even: i % 2 == 0,
+                    currentUserSyncStorage: widget.currentUserSyncStorage,
                   ),
               ],
             ),

@@ -14,6 +14,9 @@ class CurrentUserSyncStorage {
     this._userDataProvider,
     this._gettingProfileOfCurrentUser,
   );
+  bool isLecturer() {
+    return typeOfUser == EmployeeData;
+  }
 
   /// Хранит информацию о текущем пользователе
   UserData? get currentUserData => _currentUserData;

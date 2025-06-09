@@ -63,17 +63,18 @@ class UnnAuthorisationServiceImpl extends ChangeNotifier
 
   @override
   Future<AuthRequestResult> auth(
-    String login,
-    String password,
-  ) async {
-    try {
-      return await _auth(
-        {
-          _userLogin: login,
-          _userPassword: password,
-        },
-      );
-    } finally {
+  String login,
+  String password,
+) async {
+  try {
+    return await _auth(
+      {
+        _userLogin: login,
+        _userPassword: password,
+       //'otheraccount': 'e6a1aa8f1ad85b190b44ad3119d8145d', // АККАУНТ РАБОТНИКА
+      },
+    );
+  }  finally {
       // Сообщаем, что авторизация могла измениться
       // Это надо делать независимо от того, как мы выйдем отсюда
       // и ТОЛЬКО в конце, когда состояние isAuth уже не изменится

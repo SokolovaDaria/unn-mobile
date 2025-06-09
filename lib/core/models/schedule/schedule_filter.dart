@@ -29,4 +29,11 @@ class ScheduleFilter {
   IdType get idType => _id._idType;
   String get id => _id._id;
   DateTimeRange get dateTimeRange => _dateTimeRange;
+
+  Map<String, dynamic> toJson() => {
+    'idType': idType.name,
+    'id': id,
+    'start': dateTimeRange.start.toIso8601String(),
+    'end': dateTimeRange.end.toIso8601String(),
+  };
 }

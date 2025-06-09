@@ -346,6 +346,52 @@ class ScheduleTabViewModel extends BaseViewModel {
   void _updateScheduleLoader() {
     _scheduleLoader = _getScheduleLoader()..then(_invokeOnScheduleLoaded);
   }
+
+  Future<String?> getCurrentTeacher() async {
+    
+    final id = await tryLoginAndRetrieveData<IdForSchedule?>(
+      _searchIdOnPortalService.getIdOfLoggedInUser,
+      () => null,
+    );
+    final now = DateTime.now();
+    final today1540 = DateTime(now.year, now.month, now.day, 11, 00);
+
+    return await _getScheduleService.getCurrentPairTeacher(
+      ScheduleFilter(
+        _idType,
+        id?.id,
+        DateTimeRange(
+          start: today1540
+              .subtract(const Duration(minutes: 0)), // Начало: сейчас -5 мин
+          end: today1540
+              .add(const Duration(milliseconds: 1)), // Конец: сейчас +2 часа
+        ),
+      ),
+    );
+  }
+
+    Future<String?> getCurrentSubjectName() async {
+    
+    final id = await tryLoginAndRetrieveData<IdForSchedule?>(
+      _searchIdOnPortalService.getIdOfLoggedInUser,
+      () => null,
+    );
+    final now = DateTime.now();
+    final today1540 = DateTime(now.year, now.month, now.day, 11, 00);
+
+    return await _getScheduleService.getCurrentPairName(
+      ScheduleFilter(
+        _idType,
+        id?.id,
+        DateTimeRange(
+          start: today1540
+              .subtract(const Duration(minutes: 0)), // Начало: сейчас -5 мин
+          end: today1540
+              .add(const Duration(milliseconds: 1)), // Конец: сейчас +2 часа
+        ),
+      ),
+    );
+  }
 }
 
 class _ExclusionId {

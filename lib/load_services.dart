@@ -17,6 +17,7 @@ import 'package:unn_mobile/core/models/common/online_status_data.dart';
 import 'package:unn_mobile/core/providers/implementations/authorisation/authorisation_data_provider_impl.dart';
 import 'package:unn_mobile/core/providers/implementations/common/message_ignored_keys_provider_impl.dart';
 import 'package:unn_mobile/core/providers/interfaces/common/message_ignored_keys_provider.dart';
+import 'package:unn_mobile/core/services/attendance_service.dart';
 import 'package:unn_mobile/core/services/implementations/authorisation/source_authorisation_service_impl.dart';
 import 'package:unn_mobile/core/services/implementations/authorisation/unn_authorisation_refresh_service_impl.dart';
 import 'package:unn_mobile/core/services/implementations/authorisation/unn_authorisation_service_impl.dart';
@@ -106,6 +107,7 @@ import 'package:unn_mobile/core/services/interfaces/schedule/schedule_search_his
 import 'package:unn_mobile/core/services/interfaces/common/search_id_on_portal_service.dart';
 import 'package:unn_mobile/core/services/interfaces/common/storage_service.dart';
 import 'package:unn_mobile/core/providers/interfaces/profile/user_data_provider.dart';
+import 'package:unn_mobile/core/viewmodels/attendance/discipline_summary_view_model.dart';
 import 'package:unn_mobile/core/viewmodels/auth_page/auth_page_view_model.dart';
 import 'package:unn_mobile/core/viewmodels/main_page/certificates_online/certificate_item_view_model.dart';
 import 'package:unn_mobile/core/viewmodels/main_page/certificates_online/certificates_view_model.dart';
@@ -604,5 +606,11 @@ void registerDependencies() {
       get<WebinarService>(),
       get<SessionCheckerService>(),
     ),
+  );
+  injector.registerDependency(
+    () => AttendanceService(),
+  );
+  injector.registerDependency(
+    () => DisciplineSummaryViewModel(),
   );
 }

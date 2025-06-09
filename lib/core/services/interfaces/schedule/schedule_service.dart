@@ -8,4 +8,7 @@ abstract interface class ScheduleService {
   ///
   /// Возвращает список предметов или 'null', если не вышло получить ответ от портала или statusCode не равен 200
   Future<List<Subject>?> getSchedule(ScheduleFilter scheduleFilter);
+
+  Future<String?> getCurrentPairTeacher(ScheduleFilter baseFilter);
+  Future<String?> getCurrentPairName(ScheduleFilter baseFilter);
 }

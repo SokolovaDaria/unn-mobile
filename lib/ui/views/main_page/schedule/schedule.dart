@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
+import 'package:unn_mobile/core/misc/current_user_sync_storage.dart';
 import 'package:unn_mobile/core/models/schedule/schedule_filter.dart';
 import 'package:unn_mobile/core/viewmodels/factories/main_page_routes_view_models_factory.dart';
 import 'package:unn_mobile/core/viewmodels/main_page/schedule/schedule_screen_view_model.dart';
@@ -95,16 +96,23 @@ class _ScheduleScreenViewState extends State<ScheduleScreenView>
   }
 
   Expanded _createExpanded(ScheduleScreenViewModel model) {
-    return Expanded(
-      child: TabBarView(
-        controller: _tabController,
-        children: [
-          for (int i = 0; i < model.tabIdTypes.length; i++)
-            ScheduleTab(model.tabIdTypes[i], model.tabViewModels[i]),
-        ],
-      ),
-    );
-  }
+  final currentUserSyncStorage =
+      Injector.appInstance.get<CurrentUserSyncStorage>();
+
+  return Expanded(
+    child: TabBarView(
+      controller: _tabController,
+      children: [
+        for (int i = 0; i < model.tabIdTypes.length; i++)
+          ScheduleTab(
+            model.tabIdTypes[i],
+            model.tabViewModels[i],
+            currentUserSyncStorage: currentUserSyncStorage,
+          ),
+      ],
+    ),
+  );
+}
 
   @override
   void dispose() {

@@ -13,6 +13,12 @@ abstract interface class FeedFileDownloaderService {
     required String downloadUrl,
     required bool force,
   });
+   Future<File?> saveGeneratedFile({
+    required String fileName,
+    required List<int> contentBytes,
+    bool pickLocation = true, // По умолчанию предлагаем выбрать место
+    String? mimeType,
+  });
 
   /// Загружает список файлов с именами [fileNames] по URL [downloadUrl].
   ///

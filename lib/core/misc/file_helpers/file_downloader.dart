@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:content_resolver/content_resolver.dart';
 import 'package:dio/dio.dart';
 import 'package:mime/mime.dart';
@@ -205,5 +206,81 @@ class FileDownloader {
     return downloadUrl?.isNotEmpty ?? false
         ? Uri.parse(downloadUrl!).queryParameters
         : <String, String>{};
+  }
+  
+  Future<File?> saveContentToFile(
+    String fileName,
+    List<int> contentBytes, {
+    String? downloadFolderName,
+    bool pickLocation = false,
+    String? mimeType,
+  }) async {
+    if (pickLocation && Platform.isAndroid) {
+      final shortenedFileName = shortenFileName(fileName);
+      final effectiveMimeType = mimeType ?? lookupMimeType(fileName) ?? 'application/octet-stream';
+
+      String? locationUri;
+      try {
+        locationUri = await openFilePicker(shortenedFileName, effectiveMimeType);
+      } catch (error, stack) {
+        // ИСПРАВЛЕНО:
+        _loggerService.logError(
+          'Не удалось получить место для сохранения файла $fileName: $error',
+          stack,
+        );
+        return null;
+      }
+
+    if (locationUri == null) {
+        _loggerService.log('Пользователь отменил сохранение файла или место не выбрано для $fileName.');
+        return null;
+      }
+
+      try {
+        // ИСПРАВЛЕНИЕ: Конвертируем List<int> в Uint8List
+        final Uint8List bytesToSave = Uint8List.fromList(contentBytes);
+        await ContentResolver.writeContent(locationUri, bytesToSave); // Передаем Uint8List
+        // Объект File здесь может представлять URI, если это то, что возвращает openFilePicker для ContentResolver
+        return File(locationUri); 
+      } catch (error, stack) {
+         _loggerService.logError(
+          'Ошибка записи контента в URI $locationUri для файла $fileName: $error',
+          stack,
+        );
+        return null;
+      }
+    } else {
+      final downloadsPath = await getDownloadPath();
+      if (downloadsPath == null) {
+        // ИСПРАВЛЕНО:
+        _loggerService.logError(
+            'Путь для загрузки null, не удается сохранить файл $fileName.',
+            null,
+        );
+        return null;
+      }
+
+      final String filePath = _buildFilePath(
+        downloadsPath,
+        fileName,
+        downloadFolderName ?? _downloadFolderName,
+      );
+
+      final storedFile = File(filePath);
+
+      try {
+        await storedFile.parent.create(recursive: true);
+        await storedFile.writeAsBytes(contentBytes);
+        _loggerService.log('Файл сохранен в: ${storedFile.path}');
+        return storedFile;
+      } catch (error, stackTrace) {
+        // ИСПРАВЛЕНО:
+        _loggerService.logError(
+            'Исключение при записи файла $filePath: $error',
+            stackTrace,
+        );
+        return null;
+      }
+    }
   }
 }

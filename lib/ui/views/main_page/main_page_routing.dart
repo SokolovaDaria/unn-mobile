@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unn_mobile/core/models/profile/employee_data.dart';
 import 'package:unn_mobile/core/models/profile/student_data.dart';
 import 'package:unn_mobile/ui/views/main_page/about/about.dart';
+import 'package:unn_mobile/ui/views/main_page/attendance/qr_flutter.dart';
+import 'package:unn_mobile/ui/views/main_page/attendance_summary/discipline_summary_screen.dart';
 import 'package:unn_mobile/ui/views/main_page/certificates_online/certificates_online.dart';
 import 'package:unn_mobile/ui/views/main_page/feed/feed.dart';
 import 'package:unn_mobile/ui/views/main_page/feed/widgets/announcements_page.dart';
@@ -12,6 +15,7 @@ import 'package:unn_mobile/ui/views/main_page/schedule/schedule.dart';
 import 'package:unn_mobile/ui/views/main_page/settings/settings.dart';
 import 'package:unn_mobile/ui/views/main_page/donations/donations.dart';
 import 'package:unn_mobile/ui/views/main_page/source/source.dart';
+import 'package:unn_mobile/ui/views/main_page/attendance/attendance.dart';
 
 class MainPageRouteData {
   final IconData selectedIcon;
@@ -68,8 +72,7 @@ final MainPageRouteData announcementsRoute = MainPageRouteData(
   builder: (_, __) => const AnnouncementsPage(),
 );
 
-int _navbarIndex = 0; // I hate myself
-
+int _navbarIndex = 0; 
 class MainPageRouting {
   static final List<MainPageRouteData> navbarRoutes = [
     MainPageRouteData(
@@ -120,6 +123,33 @@ class MainPageRouting {
   ];
 
   static final List<MainPageRouteData> drawerRoutes = [
+    MainPageRouteData(
+      Icons.check_circle,
+      Icons.check_circle_outline,
+      'Отметка присутствия',
+      'attendance',
+      builder: (_, __) => AttendanceScreenView(),
+      userTypes: [StudentData],
+    ),
+    MainPageRouteData(
+      Icons.assessment_outlined, 
+      Icons.assessment,
+      'Сводка по дисциплине',
+      'discipline-summary', 
+      builder: (_, __) => const DisciplineSummaryScreen(),
+      userTypes: [
+        EmployeeData
+      ], 
+      onlineOnly: true, 
+    ),
+    MainPageRouteData(
+      Icons.check_circle,
+      Icons.check_circle_outline,
+      'Отметка присутствия (QR)',
+      'qr_flutter',
+      builder: (_, __) => GenerateQrScreenView(),
+      userTypes: [StudentData],
+    ),
     MainPageRouteData(
       Icons.book,
       Icons.book_outlined,

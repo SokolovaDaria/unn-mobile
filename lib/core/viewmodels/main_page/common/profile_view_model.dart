@@ -4,6 +4,7 @@ import 'package:unn_mobile/core/misc/user_functions.dart';
 import 'package:unn_mobile/core/models/profile/student_data.dart';
 import 'package:unn_mobile/core/models/profile/user_data.dart';
 import 'package:unn_mobile/core/models/profile/user_short_info.dart';
+import 'package:unn_mobile/core/models/schedule/schedule_filter.dart';
 import 'package:unn_mobile/core/services/interfaces/profile/profile_service.dart';
 import 'package:unn_mobile/core/services/interfaces/profile/profile_of_current_user_service.dart';
 import 'package:unn_mobile/core/services/interfaces/common/logger_service.dart';
@@ -23,6 +24,8 @@ class ProfileViewModel extends BaseViewModel {
   UserData? _loadedData;
 
   String? _description;
+  
+  UserData? get loadedData => _loadedData; 
 
   ProfileViewModel(
     this._getCurrentUserService,
@@ -56,6 +59,8 @@ class ProfileViewModel extends BaseViewModel {
   String get initials => getUserInitials(_loadedData);
 
   bool get isLoading => _isLoading;
+
+  ScheduleFilter? get studentId => null;
 
   void init({
     bool force = false,

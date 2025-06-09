@@ -14,6 +14,22 @@ class FeedFileDownloaderServiceImpl implements FeedFileDownloaderService {
           apiHelper,
           downloadFolderName: 'feed',
         );
+  @override
+  Future<File?> saveGeneratedFile({
+    required String fileName,
+    required List<int> contentBytes,
+    bool pickLocation = true,
+    String? mimeType,
+  }) async {
+    // Просто вызываем новый метод из нашего FileDownloader
+    return await _fileDownloader.saveContentToFile(
+      fileName,
+      contentBytes,
+      pickLocation: pickLocation,
+      mimeType: mimeType,
+      // downloadFolderName можно передать, если нужно, или FileDownloader использует свой по умолчанию
+    );
+  }
 
   @override
   Future<File?> downloadFile({
